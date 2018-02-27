@@ -3,8 +3,7 @@
 ## Setting Up AWS Account
 
 1. Create New User
-2. Grant Required Policies
-   Requird policies are:  
+2. Grant Required Policies:  
    AmazonEC2FullAccess  
    AmazonS3FullAccess  
    CloudWatchFullAccess  
@@ -17,7 +16,7 @@
 1. Download Terraform [source code](https://www.terraform.io/downloads.html)
 2. In MacOS X, unzip the downloaded source code and move it to `/usr/local/bin/`
 3. To verify, run `terraform` from your console
-4. Export needed credentials from AWS in your console
+4. Export needed credentials from AWS in your console  
    `export AWS_ACCESS_KEY_ID=<your access key ID>`  
    `export AWS_SECRET_ACCESS_KEY=<your access key ID>`
 
