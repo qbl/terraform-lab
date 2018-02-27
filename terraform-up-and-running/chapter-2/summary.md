@@ -38,3 +38,21 @@ resource "aws_instance" "example" {
 2. Run `terraform init` to get all the required plugins
 3. Run `terraform plan` to review operations that we will apply
 4. Run `terraform apply` to actually apply our configuration
+5. We can add instance name to our EC2 instance by editing "main.tf" as the code below:
+
+```
+provider "aws" {
+  region = "us-east-1"
+}
+resource "aws_instance" "example" {
+  ami = "ami-40d28157"
+  instance_type = "t2.micro"
+
+  tags {
+    Name = "terraform-example"
+  }
+}
+
+```
+
+6. Then run `terraform plan` and `terraform apply` again
