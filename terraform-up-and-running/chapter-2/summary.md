@@ -22,22 +22,27 @@
 
 ## Deploy a Single Server
 
-1. Create a file named "main.tf", fill it with the code below:
+1. Create a file named "main.tf", fill it with the code below to indicate provider (AWS) and region:
 
 ```
 provider "aws" {
   region = "us-east-1"
 }
+```
+
+2. Add resource configuration to "main.tf" with the code below:
+
+```
 resource "aws_instance" "example" {
   ami = "ami-40d28157"
   instance_type = "t2.micro"
 }
 ```
 
-2. Run `terraform init` to get all the required plugins
-3. Run `terraform plan` to review operations that we will apply
-4. Run `terraform apply` to actually apply our configuration
-5. We can add instance name to our EC2 instance by editing "main.tf" as the code below:
+3. Run `terraform init` to get all the required plugins.
+4. Run `terraform plan` to review operations that we will apply.
+5. Run `terraform apply` to actually apply our configuration.
+6. We can add instance name to our EC2 instance by editing "main.tf" as the code below:
 
 ```
 provider "aws" {
@@ -92,7 +97,9 @@ resource "aws_security_group" "instance" {
 }
 ```
 
-3. Edit our configuration for EC2 to include vpc_security_group setting:
+3. Edit our configuration for EC2 to include vpc_security_group setting.
+
+   Below we will see `${}` notation. It's Terraform's way to do string interpolation. The syntax is `${resource_type.name.attribute}`.
 
 ```
 resource "aws_instance" "example" {
@@ -112,8 +119,11 @@ resource "aws_instance" "example" {
 }
 ```
 
-4. Run `terraform graph`
-5. Run `terraform plan`
-6. Run `terraform apply`
+4. Run `terraform graph` to view the dependency graph in DOT format.
+     
+   Dependency graph determines the order in which operations are performed.
+
+5. Run `terraform plan`.
+6. Run `terraform apply`.
 7. To verify if our installation is correct, execute:  
    `curl http://<EC2 Instance Public IP>:8080`
