@@ -55,3 +55,65 @@ resource "aws_instance" "example" {
 ```
 
 6. Then run `terraform plan` and `terraform apply` again
+
+## Deploy a Single Web Server
+
+1. Edit our "main.tf" file to look like the code below:
+
+```
+resource "aws_instance" "example" {
+  ami           = "ami-40d28157"
+  instance_type = "t2.micro"
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo "Hello, World" > index.html
+              nohup busybox httpd -f -p 8080 &
+              EOF
+
+  tags {
+    Name = "terraform-example"
+  }
+}
+```
+
+2. Add security group in AWS to enable EC2 instance to receive traffic on port 8080:
+
+```
+resource "aws_security_group" "instance" {
+  name = "terraform-example-instance"
+
+  ingress {
+    from_port = 8080
+    to_port = 8080
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+```
+
+3. Edit our configuration for EC2 to include vpc_security_group setting:
+
+```
+resource "aws_instance" "example" {
+  ami = "ami-40d28157"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = ["${aws_security_group.instance.id}"]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo "Hello, World" > index.html
+              nohup busybox httpd -f -p 8080 &
+              EOF
+
+  tags {
+    Name = "terraform-example"
+  }
+}
+```
+
+4. Run `terraform graph`
+5. Run `terraform plan`
+6. Run `terraform apply`
+7. To verify if our installation is correct, execute:  
+   `curl http://<EC2 Instance Public IP>:8080`
