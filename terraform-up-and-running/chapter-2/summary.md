@@ -127,3 +127,105 @@ resource "aws_instance" "example" {
 6. Run `terraform apply`.
 7. To verify if our installation is correct, execute:  
    `curl http://<EC2 Instance Public IP>:8080`
+
+## Deploy a Configurable Web Server
+
+In our previous example, you should notice that the value of our port (8080) appears multiple time. This violates the DRY principle: every piece of knowledge must have a single, unambiguous, authoritative representation within a system. Right now, if we were to change the port, we will have to change every single appearance of the value "8080" in our Terraform configuration file. Fortunately, Terraform allows us to define *input variables* with the following format:
+
+```
+variable "<name>" {
+  [<config> ...]
+}
+```
+
+The body of a variable can contain three parameters, all of them optional:
+- description: description of the variable
+- default: default value of the variable 
+- type: either string, list, or map
+
+Some examples of using Terraform variables:
+
+```
+variable "list_example" {
+  description = "Variable with list type"
+  type = "list"
+  default = [1, 2, 3]
+}
+```
+
+```
+variable "list_example" {
+  description = "Variable with map type"
+  type = "map"
+  default = {
+    key1 = "value1"
+    key2 = "value2"
+    key3 = "value3"
+  }
+}
+```
+
+Now, if we add variable to add port in our "main.tf" without specifying its default value like this:
+
+```
+variable "server_port" {
+  description = "The port we use for HTTP requests is:"
+}
+```
+
+Terraform will prompt us to enter the value for port when execute `terraform plan`. Otherwise, we can also pass it as an argument like `terraform plan -var server_port="8080"`. We can use variables using string extrapolation syntax like `${var.variable_name}`.
+
+Now, let's apply that to our "main.tf" configuration:
+
+```
+provider "aws" {
+  region = "us-east-1"
+}
+resource "aws_instance" "example" {
+  ami = "ami-40d28157"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = ["${aws_security_group.instance.id}"]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo "Hello, World" > index.html
+              nohup busybox httpd -f -p ${var.server_port} &
+              EOF
+
+  tags {
+    Name = "terraform-example"
+  }
+}
+resource "aws_security_group" "instance" {
+  name = "terraform-example-instance"
+
+  ingress {
+    from_port = ${var.server_port}
+    to_port = ${var.server_port}
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+variable "server_port" {
+  description = "The port we use for HTTP requests is: "
+  default = 8080
+}
+```
+
+In addition to accepting input variables, Terraform can also generating output variables. To do that, we need to specify a block in this format:
+
+```
+output "<name>" {
+  value = <value>
+}
+```
+
+In our case, we are going to need the public IP of our server instance. Rather than manually look it up in AWS web interface, we can tell Terraform to output the public IP. To do that, we need to add this block to our "main.tf" file:
+
+```
+output "public_ip" {
+  value = "${aws_instance.example.public_ip}"
+}
+```
+
+Now, when we run `terraform apply`, Terraform will not change anything (since we did not specify any changes) but it will output the public IP of our server instance.
