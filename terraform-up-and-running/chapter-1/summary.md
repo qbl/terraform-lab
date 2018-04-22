@@ -85,7 +85,7 @@ At a glance, it looks a lot like the bash script. However, a tool like Ansible o
 1. Coding Conventions  
    Ansible enforces a consistent and predictable structure so it is easier for any DevOps engineer to navigate the code.
 2. Idempotence  
-   Code that works correctly no matter how many times it is run is called an idempotent code. In our ad hoc script example above, it is hard to make our bash script idempotent. On a second run, the command "sudo apt-get install -y php" may raise error as PHP is already installed. However, with Ansible Role example above, Apache will be installed only if it is not installed already and will be started only if it is not running already.
+   Code that works correctly no matter how many times it is run is called an idempotent code. In our ad hoc script example above, it is hard to make our bash script idempotent. On a second run, the command `sudo apt-get install -y php` may raise error as PHP is already installed. However, with Ansible Role example above, Apache will be installed only if it is not installed already and will be started only if it is not running already.
 3. Distribution  
    Ad hoc scripts are designed to run on a single machine. Configuration Management Tools are designed for managing large numbers of remote servers.
 
