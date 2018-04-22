@@ -173,10 +173,17 @@ We can define our entire infrastructure in Terraform configuration files and com
 
 Knowing the plethora of options available to create our own infrastructure as code, how to choose which IAC to use? The book suggests to use these points when considering which IAC to use:
 
-1. Configuration Management vs Provisioning
-2. Mutable Infrastructure vs Immutable Infrastructure
-3. Procedural Languange vs Declarative Language
-4. Master vs Masterless
-5. Agent vs Agentless
-6. Large Community vs Small Community
-7. Mature vs Cutting Edge
+1. Configuration Management vs Provisioning  
+   While the distinction between configuration management tools and server provisioning tools is usually not clear cut, it is worth to know that Terraform is a server provisioning tool.
+2. Mutable Infrastructure vs Immutable Infrastructure  
+   In mutable infrastructure paradigm, updates will modify your existing infrastructure. In immutable paradigm, any updates will create a new instance of infrastructure and decomission the old instance. CMIIW, in my experience, Terraform can be used for both.
+3. Procedural Language vs Declarative Language 
+   In procedural language we write codes that specify the steps to achieve some desired state. In declarative language, we write codes that defines the desried state and we let our IAC tools to figure out how to achieve that state. Terraform adopts declarative paradigm.
+4. Master vs Masterless  
+   Some tools (such as Chef, Puppet, and Salt Stack) require us to run a master server (such as Chef Server). Some other tools, like Terraform, are masterless by default. While Terraform does communicate with cloud providers using APIs, it does not require a separate master server infrastructure.
+5. Agent vs Agentless  
+   Some tools require us to install an agent software. Some other tools, Terraform included, does not. To use Terraform, we will need Terraform binary and our provider's agent (such as AWS CLI).
+6. Large Community vs Small Community  
+   Compared to most IAC tools, Terraform does not have the largest community although it does not have the smallest community either.
+7. Mature vs Cutting Edge  
+   Compared to other IAC tools, Terraform is the youngest and has the smallest version number (the latest version is 0.11.7 as of this writing).
