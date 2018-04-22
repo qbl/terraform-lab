@@ -54,7 +54,7 @@ sudo git clone https://github.com/brikis98/php-app.git /var/www/html/app
 sudo service apache2 start
 ```
 
-While it is easy and quick to write, writing ad hoc scripts does scale very well. It will be hard to use ad hoc script to manage dozens of servers, databases, load balancers, network configurations, and so on.
+While it is easy and quick to write, writing ad hoc scripts does not scale very well. It will be hard to use ad hoc script to manage dozens of servers, databases, load balancers, network configurations, and so on.
 
 ### 2.2. Configuration Management Tools
 
@@ -82,11 +82,11 @@ Configuration Management Tools are designed to install and manage software on ex
 
 At a glance, it looks a lot like the bash script. However, a tool like Ansible offers several advantages over ad hoc scripts:
 
-1. Coding Conventions
+1. Coding Conventions  
    Ansible enforces a consistent and predictable structure so it is easier for any DevOps engineer to navigate the code.
-2. Idempotence
+2. Idempotence  
    Code that works correctly no matter how many times it is run is called an idempotent code. In our example above, it is hard to make our bash script idempotent. On a second run, the command "sudo apt-get install -y php" may raise error as PHP is already installed. However, with Ansible Role example above, Apache will be installed only if it is not installed already and will be started only if it is not running already.
-3. Distribution
+3. Distribution  
    Ad hoc scripts are designed to run on a single machine. Configuration Management Tools are designed for managing large numbers of remote servers.
 
 ### 2.3. Server Templating Tools
