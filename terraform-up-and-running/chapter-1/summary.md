@@ -134,19 +134,19 @@ While Configuration Management Tools and Server Templating Tools define the code
 
 When infrastructure is defined as code, we can use software engineering practices to improve our software delivery process. These prcatices include:
 
-1. Self-service
+1. Self-service  
    If infrastructure is defined in code, the entire deployment process can be automated, and developers can kick off their own deployments whenever necessary.
-2. Speed and Safety
+2. Speed and Safety  
    Since deployment process is automated, computer can execute it significantly faster than a person. It is also safer since the deployment process is more consistent and repeatable.
-3. Documentation
+3. Documentation  
    Infrastructure as code also acts as a documentation, allowing everyone in the team to understand how things work in their infrastructure.
-4. Version Control
+4. Version Control  
    Just as with any code, we can use version control to track changes made to our infrastructure.
-5. Validation
+5. Validation  
    Just as with any code, we can use various methods to reduce the chance of deffects in our code such as code review or automated tests.
-6. Reuse
+6. Reuse  
    We can package our infrastructure as code into reusable modules.
-7. Happiness
+7. Happiness  
    Infrastructure as code allows computers to do what they do best (automation) and developers to do what they do best (coding).
 
 ## 4. How Terraform Works
