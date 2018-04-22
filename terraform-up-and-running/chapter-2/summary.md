@@ -2,6 +2,8 @@
 
 ## 0. Setting Up AWS Account
 
+To run code examples in this book, we need to setup an AWS account:
+
 1. Create New User
 2. Grant Required Policies:  
    AmazonEC2FullAccess  
@@ -12,6 +14,8 @@
    AmazonRDSFullAccess  
 
 ## 1. Install Terraform
+
+To install Terraform, follow this steps:
 
 1. Download Terraform [source code](https://www.terraform.io/downloads.html)
 2. In MacOS X, unzip the downloaded source code and move it to `/usr/local/bin/`
@@ -48,6 +52,7 @@ resource "aws_instance" "example" {
 provider "aws" {
   region = "us-east-1"
 }
+
 resource "aws_instance" "example" {
   ami = "ami-40d28157"
   instance_type = "t2.micro"
@@ -234,7 +239,7 @@ Now, when we run `terraform apply`, Terraform will not change anything (since we
 
 In the real world, we rarely deploy our app to a single web server. We usually need to run a cluster of servers. To do this, in AWS we can use Auto Scaling Group (ASG). An ASG takes care a lot of tasks such as launching a cluster of EC2 instances, monitoring the health of of each instance, replacing failed instances, and adjusting the size of the cluster in response to load.
 
-To create an ASG, first we need to change our configuration. Instead of using `aws_instance` resource, we will use `aws_launch_configuration` resource instead.
+To create an ASG, first we need to change our configuration. Instead of using `aws_instance` resource, we will use `aws_launch_configuration`.
 
 ```
 resource "aws_launch_configuration" "example" {
