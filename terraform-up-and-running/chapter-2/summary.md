@@ -1,6 +1,6 @@
 # Getting Started with Terraform
 
-## Setting Up AWS Account
+## 0. Setting Up AWS Account
 
 1. Create New User
 2. Grant Required Policies:  
@@ -11,7 +11,7 @@
    AmazonDynamoDBFullAccess  
    AmazonRDSFullAccess  
 
-## Install Terraform
+## 1. Install Terraform
 
 1. Download Terraform [source code](https://www.terraform.io/downloads.html)
 2. In MacOS X, unzip the downloaded source code and move it to `/usr/local/bin/`
@@ -20,7 +20,7 @@
    `export AWS_ACCESS_KEY_ID=<your access key ID>`  
    `export AWS_SECRET_ACCESS_KEY=<your access key ID>`
 
-## Deploy a Single Server
+## 2. Deploy a Single Server
 
 1. Create a file named "main.tf", fill it with the code below to indicate provider (AWS) and region:
 
@@ -61,7 +61,7 @@ resource "aws_instance" "example" {
 
 6. Then run `terraform plan` and `terraform apply` again
 
-## Deploy a Single Web Server
+## 3. Deploy a Single Web Server
 
 1. Edit our "main.tf" file to look like the code below:
 
@@ -128,7 +128,7 @@ resource "aws_instance" "example" {
 7. To verify if our installation is correct, execute:  
    `curl http://<EC2 Instance Public IP>:8080`
 
-## Deploy a Configurable Web Server
+## 4. Deploy a Configurable Web Server
 
 In our previous example, you should notice that the value of our port (8080) appears multiple time. This violates the DRY principle: every piece of knowledge must have a single, unambiguous, authoritative representation within a system. Right now, if we were to change the port, we will have to change every single appearance of the value "8080" in our Terraform configuration file. Fortunately, Terraform allows us to define *input variables* with the following format:
 
@@ -229,3 +229,48 @@ output "public_ip" {
 ```
 
 Now, when we run `terraform apply`, Terraform will not change anything (since we did not specify any changes) but it will output the public IP of our server instance.
+
+## 5. Deploying a Cluster of Web Servers
+
+In the real world, we rarely deploy our app to a single web server. We usually need to run a cluster of servers. To do this, in AWS we can use Auto Scaling Group (ASG). An ASG takes care a lot of tasks such as launching a cluster of EC2 instances, monitoring the health of of each instance, replacing failed instances, and adjusting the size of the cluster in response to load.
+
+To create an ASG, first we need to change our configuration. Instead of using `aws_instance` resource, we will use `aws_launch_configuration` resource instead.
+
+```
+resource "aws_launch_configuration" "example" {
+  ami = "ami-40d28157"
+  instance_type = "t2.micro"
+  security_groups = ["${aws_security_group.instance.id}"]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo "Hello, World" > index.html
+              nohup busybox httpd -f -p ${var.server_port} &
+              EOF
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+```
+
+New thing from the code above is `lifecycle` parameter. What we did was telling Terraform to create a new instance of EC2 before deleting the old one. We will add this parameter to our security group configuration too.
+
+```
+resource "aws_security_group" "instance" {
+  name = "terraform-example-instance"
+
+  ingress {
+    from_port = "${var.server_port}"
+    to_port = "${var.server_port}"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+```
+
+Now we can create our ASG config.
