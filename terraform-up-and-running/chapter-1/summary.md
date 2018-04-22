@@ -1,6 +1,6 @@
 # Why Terraform
 
-## Intro
+## 0. Intro
 
 In this chapter, before we learn anything about how to use Terraform, we try to answer the fundamental question first: "why Terraform?". To answer this, we need to understand a little bit about *software delivery*. Software is not completed when the code is working on programmer's code. Nor it is completed when it is committed and pushed to git repository. Nor it is completed when it is reviewed and marked as "ready to ship". It is only completed once it is delivered to end users.
 
@@ -12,7 +12,7 @@ Therefore, when we try to answer "why Terraform?", we need to understand the big
 4. How Terraform works
 5. How Terraform compares to other infrastructure as a code tools.
 
-## The Rise of DevOps
+## 1. The Rise of DevOps
 
 Before the age of cloud computing like Amazon Web Services, Microsoft Azure, and Google Cloud Platform, companies usually have a dedicated team that manage their infrastructure. This team is usually called Operations (or Ops) team. Back then, Ops team handle a lot of hardware related issues, from setting up to troubleshooting.
 
@@ -20,7 +20,7 @@ Nowadays, with the widespread adoption of cloud infrastructures, Ops team no lon
 
 There are a lot of different definitions of DevOps. Rather than defining what is DevOps, this book takes a simple approach by defining that "The goal of DevOps is to make software delivery vastly more efficient". While there are four core values of the DevOps movement (culture, automation, monitoring, and sharing), this book focuses on automation part of DevOps. By using Terraform, a DevOps team's goal is to automate software delivery process through code rather than manually executing shell commands.
 
-## What is Infrastructure as  Code?
+## 2. What is Infrastructure as  Code?
 
 The idea behind infrastructure as code (IAC) is to write and execute code to define, deploy, and update infrastructure. This is one of key insight of the DepOps movement: we can manage *almost* everything in code.
 
@@ -33,7 +33,7 @@ There are four categories of IAC tools:
 
 Let's dig a little deeper on each item in the next sub chapters.
 
-### Ad Hoc Scripts
+### 2.1. Ad Hoc Scripts
 
 Writing ad hoc scripts is the most straightforward way to automate things. We just have to break down the tasks we want to accomplish into steps and then define each step in code using any scripting language. This is an example of bash script to get a PHP app up and running with an Apache server:
 
@@ -56,7 +56,7 @@ sudo service apache2 start
 
 While it is easy and quick to write, writing ad hoc scripts does scale very well. It will be hard to use ad hoc script to manage dozens of servers, databases, load balancers, network configurations, and so on.
 
-### Configuration Management Tools
+### 2.2. Configuration Management Tools
 
 Configuration Management Tools are designed to install and manage software on existing servers. Chef, Puppet, Ansible, and Salt Stack fall under this category. Below is an example of an Ansible Role file named web-server.yml. It does the same thing as bash script in the previous example.
 
@@ -89,7 +89,7 @@ At a glance, it looks a lot like the bash script. However, a tool like Ansible o
 3. Distribution
    Ad hoc scripts are designed to run on a single machine. Configuration Management Tools are designed for managing large numbers of remote servers.
 
-### Server Templating Tools
+### 2.3. Server Templating Tools
 
 Server Templating Tools have recently become an alternative as well as complement to Configuration Management Tools. The idea behind Server Templating Tools is to create an image of a server that captures a fully self-contained "snapshot" of the operating system, the software, the files, and all other relevant details. We can combine Server Templating Tools (such as Docker) with Configuration Management Tools (such as Ansible) to install an image on multiple servers.
 
@@ -126,11 +126,11 @@ There are two categories of tools to work with images:
 }
 ```
 
-### Server Provisioning Tools
+### 2.4. Server Provisioning Tools
 
 While Configuration Management Tools and Server Templating Tools define the codes that run on each server, Server Provisioning Tools are responsible for creating the server itself. In addition, we can use Server Provisioning Tools not only to create servers but also to create almost every aspect of infrastructure such as databases, caches, or load balancers. Terraform, CloudFormation, and OpenStack Heat fall in this category of tools.
 
-## Benefits of Infrastructure as Code
+## 3. Benefits of Infrastructure as Code
 
 When infrastructure is defined as code, we can use software engineering practices to improve our software delivery process. These prcatices include:
 
@@ -149,7 +149,7 @@ When infrastructure is defined as code, we can use software engineering practice
 7. Happiness
    Infrastructure as code allows computers to do what they do best (automation) and developers to do what they do best (coding).
 
-## How Terraform Works
+## 4. How Terraform Works
 
 Terraform is an open source tool written in Go. Terraform source code is compiled into a binary called 'terraform'. This binary can be used to deploy infrastructure from our local machine (or any machine) to where our servers need to be. Under the hood, terraform binary makes API calls to one or more providers (such as AWS, Azure, or Google Cloud). To tell terraform what API calls to make, we will need to specify what infrastructures we wish to create in a 'Terraform configurations' file. These configurations are the "code" in "infrastructure as code". Below is an example of Terraform configuration:
 
@@ -169,7 +169,7 @@ resource "dnsimple_record" "example" {
 
 We can define our entire infrastructure in Terraform configuration files and commit those files to version control. We can run certain Terraform commands to actually deploy the infrastructure according to our configuration. 
 
-## How Terraform Compares to Other Infrastructure as a Code Tools
+## 5. How Terraform Compares to Other Infrastructure as a Code Tools
 
 Knowing the plethora of options available to create our own infrastructure as code, how to choose which IAC to use? The book suggests to use these points when considering which IAC to use:
 
